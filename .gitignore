@@ -3,3 +3,4 @@ node_modules
 .vercel
 serve.log
 *.log
+opencode.json
