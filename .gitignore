@@ -4,3 +4,4 @@ node_modules
 serve.log
 *.log
 opencode.json
+.env.local
