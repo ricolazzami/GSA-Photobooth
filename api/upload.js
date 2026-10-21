@@ -1,5 +1,3 @@
-import crypto from 'crypto';
-
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -14,24 +12,15 @@ export default async function handler(req, res) {
   }
 
   const cloud = process.env.CLOUDINARY_CLOUD_NAME;
-  const key = process.env.CLOUDINARY_API_KEY;
-  const secret = process.env.CLOUDINARY_API_SECRET;
-  if (!cloud || !key || !secret) {
-    return res.status(500).json({ error: 'Cloudinary env missing (CLOUDINARY_CLOUD_NAME / API_KEY / API_SECRET)' });
+  if (!cloud) {
+    return res.status(500).json({ error: 'Cloudinary env missing (CLOUDINARY_CLOUD_NAME)' });
   }
 
   try {
-    const timestamp = Math.floor(Date.now() / 1000);
-    const folder = 'photobooth';
-    const toSign = `folder=${folder}&timestamp=${timestamp}${secret}`;
-    const signature = crypto.createHash('sha1').update(toSign).digest('hex');
-
     const form = new URLSearchParams();
     form.append('file', image);
-    form.append('api_key', key);
-    form.append('timestamp', String(timestamp));
-    form.append('folder', folder);
-    form.append('signature', signature);
+    form.append('upload_preset', 'ml_default');
+    form.append('folder', 'photobooth');
 
     const r = await fetch(`https://api.cloudinary.com/v1_1/${cloud}/image/upload`, { method: 'POST', body: form });
     const data = await r.json();
