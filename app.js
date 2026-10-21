@@ -33,7 +33,21 @@ async function composeStrip(frames){
   const canvas=document.createElement('canvas'); canvas.width=cfg.w; canvas.height=cfg.h;
   const ctx=canvas.getContext('2d'); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,cfg.w,cfg.h);
   frames.forEach((fc,i)=>{
-    const fw=fc.width,fh=fc.height,scale=Math.max(cfg.pw/fw,cfg.ph/fh),sw=cfg.pw/scale,sh=cfg.ph/scale,sx=(fw-sw)/2,sy=(fh-sh)/2;
+    const fw=fc.width,fh=fc.height;
+    const targetAspect=cfg.pw/cfg.ph;
+    const sourceAspect=fw/fh;
+    let sw,sh,sx,sy;
+    if(sourceAspect>targetAspect){
+      sh=fh;
+      sw=fh*targetAspect;
+      sx=(fw-sw)/2;
+      sy=0;
+    }else{
+      sw=fw;
+      sh=fw/targetAspect;
+      sx=0;
+      sy=(fh-sh)/2;
+    }
     ctx.drawImage(fc,sx,sy,sw,sh,cfg.px,cfg.py[i],cfg.pw,cfg.ph);
   });
   const img=new Image(); img.crossOrigin='anonymous'; img.src=`template-${selectedTpl===1?'a':'b'}.png`;
