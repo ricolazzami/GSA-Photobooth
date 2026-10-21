@@ -93,14 +93,19 @@
       <h2 class="text-[24px] font-bold">Your Photostrip</h2>
       <p id="upload-status" class="text-on-surface-variant text-[14px] mt-1"></p>
     </div>
-    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-      <div class="bg-surface-variant p-4 rounded-2xl shadow-sm">
-        <img id="result-img" class="w-full rounded-xl shadow" alt="photostrip"/>
-        <div class="text-[12px] text-on-surface-variant mt-2 text-center">1200×3600 · JPEG</div>
+    <div class="w-full grid grid-cols-1 md:grid-cols-[1fr_320px] gap-8 items-center justify-center">
+      <div class="bg-surface-variant p-4 rounded-2xl shadow-sm flex justify-center">
+        <img id="result-img" class="h-[75vh] object-contain rounded-xl shadow" alt="photostrip"/>
       </div>
-      <div class="bg-surface border border-outline rounded-2xl p-6 flex flex-col items-center gap-4 shadow-sm">
-        <div id="qrcode" class="bg-white p-2 rounded-xl"></div>
-        <a id="download-link" target="_blank" rel="noopener" class="hidden px-6 py-3 rounded-2xl bg-primary text-on-primary font-bold text-[14px]">Open Image</a>
+      <div class="bg-surface border border-outline rounded-2xl p-8 flex flex-col items-center gap-6 shadow-sm">
+        <div id="qrcode" class="bg-white p-4 rounded-xl border border-outline/50 shadow-inner"></div>
+        <div class="text-center space-y-1">
+          <p class="font-bold text-[16px]">Scan to Download</p>
+          <p class="text-[12px] text-on-surface-variant">Available for 24 hours</p>
+        </div>
+        <a id="download-link" target="_blank" rel="noopener" class="hidden w-full px-6 py-4 rounded-2xl bg-primary text-on-primary font-bold text-[15px] flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined">download</span>Open Image
+        </a>
       </div>
     </div>
     <button id="btn-start-over" class="w-full max-w-[480px] h-[72px] rounded-2xl bg-success text-white font-bold text-[16px] shadow-card active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
