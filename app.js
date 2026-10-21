@@ -1,6 +1,6 @@
 const SCREENS=['screen-template','screen-camera','screen-capture','screen-result'];
 const TPL_CONFIG={
-  1:{w:600,h:1800,pw:540,ph:405,px:30,py:[65,548,1032],shots:3},
+  1:{w:600,h:1800,pw:518,ph:380,px:41,py:[74,496,918],shots:3},
   2:{w:1200,h:3600,pw:1000,ph:750,px:100,py:[100,920,1740,2560],shots:4}
 };
 let stream=null, shots=[], selectedTpl=1, uploading=false, countdownLock=false;
