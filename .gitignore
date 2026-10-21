@@ -5,3 +5,4 @@ serve.log
 *.log
 opencode.json
 .env.local
+.env*

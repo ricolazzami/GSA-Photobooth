@@ -45,32 +45,40 @@
 
 <!-- SCREEN: CAMERA PREVIEW -->
 <section id="screen-camera" class="screen">
-  <div class="w-full max-w-[700px] mx-auto px-6 py-8 flex flex-col items-center gap-6">
-    <div class="w-full flex items-center justify-between">
-      <button onclick="document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-template').classList.add('active')" class="px-5 h-[56px] rounded-2xl bg-surface-variant text-on-surface font-medium text-[14px] flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">← Change Template</button>
-      <span class="text-[14px] text-on-surface-variant font-medium">4-shot photostrip</span>
+  <div class="relative w-full h-full min-h-screen flex items-center justify-center bg-black overflow-hidden">
+    <video id="video-preview" autoplay playsinline muted class="absolute inset-0 w-full h-full object-cover scale-x-[-1]"></video>
+    
+    <!-- Top bar overlay -->
+    <div class="absolute top-0 inset-x-0 p-6 flex items-center justify-between z-10 bg-gradient-to-b from-black/60 to-transparent">
+      <button onclick="document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-template').classList.add('active')" class="px-5 h-[52px] rounded-full bg-white/20 backdrop-blur-md text-white font-medium text-[15px] flex items-center shadow border border-white/20 active:scale-95 transition-transform">← Change Template</button>
+      <span class="px-4 py-2 rounded-full bg-black/40 backdrop-blur-md text-white text-[14px] font-medium border border-white/10">4-shot photostrip</span>
     </div>
-    <div class="relative w-full max-w-[560px] aspect-[4/3] bg-on-surface rounded-2xl overflow-hidden shadow-lg">
-      <video id="video-preview" autoplay playsinline muted class="absolute inset-0 w-full h-full object-cover scale-x-[-1]"></video>
+
+    <!-- Bottom action overlay -->
+    <div class="absolute bottom-0 inset-x-0 p-8 pb-12 flex flex-col items-center justify-center z-10 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+      <button id="btn-start-capture" class="w-full max-w-[420px] h-[72px] rounded-full bg-primary text-on-primary font-bold text-[18px] shadow-2xl active:scale-[0.98] transition-transform flex items-center justify-center gap-2 border border-white/20">
+        <span class="material-symbols-outlined text-[28px]">photo_camera</span>Tap to Start
+      </button>
+      <p id="camera-error" class="hidden mt-4 w-full max-w-[420px] bg-error/90 backdrop-blur text-white px-4 py-3 rounded-xl text-[14px] text-center"></p>
     </div>
-    <button id="btn-start-capture" class="w-full max-w-[560px] h-[72px] rounded-2xl bg-primary text-on-primary font-bold text-[16px] shadow-card active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
-      <span class="material-symbols-outlined">photo_camera</span>Tap to Start
-    </button>
-    <p id="camera-error" class="hidden w-full max-w-[560px] bg-error text-white px-4 py-3 rounded-xl text-[14px]"></p>
   </div>
 </section>
 
 <!-- SCREEN: CAPTURE IN PROGRESS -->
 <section id="screen-capture" class="screen">
-  <div class="w-full h-full flex flex-col items-center justify-center bg-on-surface text-white gap-6 px-6">
-    <div class="relative w-full max-w-[560px] aspect-[4/3] rounded-2xl overflow-hidden">
-      <video id="video-capture" autoplay playsinline muted class="absolute inset-0 w-full h-full object-cover scale-x-[-1]"></video>
-      <div id="flash" class="flash"></div>
-      <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <span id="countdown-num" class="text-white font-bold text-[72px] drop-shadow-lg">3</span>
-      </div>
+  <div class="relative w-full h-full min-h-screen flex items-center justify-center bg-black overflow-hidden">
+    <video id="video-capture" autoplay playsinline muted class="absolute inset-0 w-full h-full object-cover scale-x-[-1]"></video>
+    <div id="flash" class="flash z-20"></div>
+
+    <!-- Top info overlay -->
+    <div class="absolute top-0 inset-x-0 p-6 flex justify-center z-10 bg-gradient-to-b from-black/60 to-transparent">
+      <div id="shot-progress" class="px-6 py-2 rounded-full bg-black/50 backdrop-blur-md text-white text-[18px] font-bold tracking-wide border border-white/15">Shot 1/4</div>
     </div>
-    <div id="shot-progress" class="text-[18px] font-bold">Shot 1/4</div>
+
+    <!-- Central countdown overlay -->
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+      <span id="countdown-num" class="text-white font-black text-[140px] drop-shadow-[0_8px_30px_rgba(0,0,0,0.8)] select-none">3</span>
+    </div>
   </div>
 </section>
 

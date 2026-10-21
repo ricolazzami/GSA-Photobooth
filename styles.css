@@ -1,5 +1,6 @@
 .screen { display: none; }
-.screen.active { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; width: 100%; height: 100%; }
+#screen-camera.active, #screen-capture.active { padding: 0; margin: 0; max-width: none; overflow: hidden; position: fixed; inset: 0; }
 .flash { position: absolute; inset: 0; background: white; opacity: 0; pointer-events: none; transition: opacity 0.15s ease; }
 .flash.show { opacity: 1; }
 
