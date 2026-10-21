@@ -1,7 +1,22 @@
 const SCREENS=['screen-template','screen-camera','screen-capture','screen-result'];
 const TPL_CONFIG={
-  1:{w:600,h:1800,pw:518,ph:380,px:41,py:[74,496,918],shots:3},
-  2:{w:1200,h:3600,pw:1000,ph:750,px:100,py:[100,920,1740,2560],shots:4}
+  1:{
+    w:600,h:1800,shots:3,
+    slots:[
+      {x:25, y:88, w:548, h:404},
+      {x:26, y:515, w:548, h:405},
+      {x:27, y:943, w:548, h:404}
+    ]
+  },
+  2:{
+    w:1200,h:3600,shots:4,
+    slots:[
+      {x:100, y:100, w:1000, h:750},
+      {x:100, y:920, w:1000, h:750},
+      {x:100, y:1740, w:1000, h:750},
+      {x:100, y:2560, w:1000, h:750}
+    ]
+  }
 };
 let stream=null, shots=[], selectedTpl=1, uploading=false, countdownLock=false;
 
@@ -33,8 +48,10 @@ async function composeStrip(frames){
   const canvas=document.createElement('canvas'); canvas.width=cfg.w; canvas.height=cfg.h;
   const ctx=canvas.getContext('2d'); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,cfg.w,cfg.h);
   frames.forEach((fc,i)=>{
+    const slot=cfg.slots[i];
+    if(!slot) return;
     const fw=fc.width,fh=fc.height;
-    const targetAspect=cfg.pw/cfg.ph;
+    const targetAspect=slot.w/slot.h;
     const sourceAspect=fw/fh;
     let sw,sh,sx,sy;
     if(sourceAspect>targetAspect){
@@ -48,7 +65,7 @@ async function composeStrip(frames){
       sx=0;
       sy=(fh-sh)/2;
     }
-    ctx.drawImage(fc,sx,sy,sw,sh,cfg.px,cfg.py[i],cfg.pw,cfg.ph);
+    ctx.drawImage(fc,sx,sy,sw,sh,slot.x,slot.y,slot.w,slot.h);
   });
   const img=new Image(); img.crossOrigin='anonymous'; img.src=`template-${selectedTpl===1?'a':'b'}.png`;
   await new Promise(r=>{img.onload=r; img.onerror=r; setTimeout(r,1000);});
