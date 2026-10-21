@@ -102,3 +102,9 @@ $('btn-start-over')?.addEventListener('click',()=>{
   $('qrcode').innerHTML=''; $('download-link').classList.add('hidden'); $('upload-status').textContent='';
   show('screen-template');
 });
+
+$('btn-reset-capture')?.addEventListener('click',()=>{
+  countdownLock=false;
+  shots=[];
+  show('screen-camera');
+});
