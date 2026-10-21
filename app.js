@@ -1,5 +1,8 @@
 const SCREENS=['screen-template','screen-camera','screen-capture','screen-result'];
-const STRIP_W=1200, STRIP_H=3600, PHOTO_W=1000, PHOTO_H=750, PHOTO_X=100, PHOTO_Y=[100,920,1740,2560];
+const TPL_CONFIG={
+  1:{w:600,h:1800,pw:500,ph:500,px:50,py:[50,650,1250],shots:3},
+  2:{w:1200,h:3600,pw:1000,ph:750,px:100,py:[100,920,1740,2560],shots:4}
+};
 let stream=null, shots=[], selectedTpl=1, uploading=false, countdownLock=false;
 
 const $=s=>document.getElementById(s);
@@ -26,15 +29,16 @@ function captureFrame(video){
 }
 
 async function composeStrip(frames){
-  const canvas=document.createElement('canvas'); canvas.width=STRIP_W; canvas.height=STRIP_H;
-  const ctx=canvas.getContext('2d'); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,STRIP_W,STRIP_H);
+  const cfg=TPL_CONFIG[selectedTpl];
+  const canvas=document.createElement('canvas'); canvas.width=cfg.w; canvas.height=cfg.h;
+  const ctx=canvas.getContext('2d'); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,cfg.w,cfg.h);
   frames.forEach((fc,i)=>{
-    const fw=fc.width,fh=fc.height,scale=Math.max(PHOTO_W/fw,PHOTO_H/fh),sw=PHOTO_W/scale,sh=PHOTO_H/scale,sx=(fw-sw)/2,sy=(fh-sh)/2;
-    ctx.drawImage(fc,sx,sy,sw,sh,PHOTO_X,PHOTO_Y[i],PHOTO_W,PHOTO_H);
+    const fw=fc.width,fh=fc.height,scale=Math.max(cfg.pw/fw,cfg.ph/fh),sw=cfg.pw/scale,sh=cfg.ph/scale,sx=(fw-sw)/2,sy=(fh-sh)/2;
+    ctx.drawImage(fc,sx,sy,sw,sh,cfg.px,cfg.py[i],cfg.pw,cfg.ph);
   });
   const img=new Image(); img.crossOrigin='anonymous'; img.src=`template-${selectedTpl===1?'a':'b'}.png`;
   await new Promise(r=>{img.onload=r; img.onerror=r; setTimeout(r,1000);});
-  if(img.naturalWidth) ctx.drawImage(img,0,0,STRIP_W,STRIP_H);
+  if(img.naturalWidth) ctx.drawImage(img,0,0,cfg.w,cfg.h);
   return canvas.toDataURL('image/jpeg',0.92);
 }
 
@@ -70,6 +74,8 @@ window.selectTemplate=id=>{
   });
   const card=$(`card-tpl-${id}`);
   if(card){ card.classList.add('selected','border-primary'); card.classList.remove('border-outline'); }
+  const label=$('shots-label');
+  if(label) label.textContent=TPL_CONFIG[id].shots+'-shot';
 };
 
 $('btn-template-next')?.addEventListener('click', async()=>{
@@ -79,16 +85,17 @@ $('btn-template-next')?.addEventListener('click', async()=>{
 $('btn-start-capture')?.addEventListener('click', async()=>{
   if(countdownLock) return; countdownLock=true;
   shots=[];
+  const cfg=TPL_CONFIG[selectedTpl];
   const vc=$('video-capture'); vc.srcObject=stream; await vc.play().catch(()=>{});
   show('screen-capture');
   const num=$('countdown-num'), flash=$('flash');
-  for(let i=0;i<4;i++){
-    $('shot-progress').textContent=`Shot ${i+1}/4`;
+  for(let i=0;i<cfg.shots;i++){
+    $('shot-progress').textContent=`Shot ${i+1}/${cfg.shots}`;
     for(let c=3;c>=1;c--){if(num) num.textContent=c; await sleep(800);}
     if(num) num.textContent='';
     if(flash){flash.classList.add('show'); await sleep(350); flash.classList.remove('show');}
     shots.push(captureFrame(vc));
-    if(i<3) await sleep(1200);
+    if(i<cfg.shots-1) await sleep(1200);
   }
   const strip=await composeStrip(shots);
   $('result-img').src=strip;
